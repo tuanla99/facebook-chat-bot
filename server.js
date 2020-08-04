@@ -46,7 +46,7 @@ app.post('/webhook', function(req, res) {
 // Gửi thông tin tới REST API để trả lời
 function sendMessage(senderId, message) {
   request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
+    url: 'https://graph.facebook.com/v7.0/me/messages',
     qs: {
       access_token: "EAAEmHQHz0R8BAFZBkQJFkvdlBAzAYI5lvVtUOVWg4ZBPkWBcrIZB8UmIa5gKiGpqSykWe8VGZAMSsfouy2yIEZAzSDoLZB0nZBxhFyfBSn5SZBZAC8xmtnuhXJRqqIF7ZBrF3glAtRvKiX0C62Sjd8H3kr8ZBw6MIbNx3NyibdZCw4plXAZDZD",
     },
