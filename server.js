@@ -2,7 +2,7 @@ var logger = require('morgan');
 var http = require('http');
 var bodyParser = require('body-parser');
 var express = require('express');
-
+var router = express();
 
 var app = express();
 app.use(logger('dev'));
@@ -11,12 +11,13 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 var server = http.createServer(app);
-
+var request = require("request");
 
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
 });
 
+// Đây là đoạn code để tạo Webhook
 app.get('/webhook', function(req, res) {
   if (req.query['hub.verify_token'] === 'tuanla99') {
     res.send(req.query['hub.challenge']);
@@ -24,6 +25,7 @@ app.get('/webhook', function(req, res) {
   res.send('Error, wrong validation token');
 });
 
+// Xử lý khi có người nhắn tin cho bot
 app.post('/webhook', function(req, res) {
   var entries = req.body.entry;
   for (var entry of entries) {
@@ -43,10 +45,12 @@ app.post('/webhook', function(req, res) {
 
   res.status(200).send("OK");
 });
+
+
 // Gửi thông tin tới REST API để trả lời
 function sendMessage(senderId, message) {
   request({
-    url: 'https://graph.facebook.com/v7.0/me/messages',
+    url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {
       access_token: "EAAEmHQHz0R8BAFZBkQJFkvdlBAzAYI5lvVtUOVWg4ZBPkWBcrIZB8UmIa5gKiGpqSykWe8VGZAMSsfouy2yIEZAzSDoLZB0nZBxhFyfBSn5SZBZAC8xmtnuhXJRqqIF7ZBrF3glAtRvKiX0C62Sjd8H3kr8ZBw6MIbNx3NyibdZCw4plXAZDZD",
     },
@@ -61,10 +65,12 @@ function sendMessage(senderId, message) {
     }
   });
 }
-
+/*
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3002);
 app.set('ip', process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1");
-
-server.listen(app.get('port'), app.get('ip'), function() {
-  console.log("Chat bot server listening at %s:%d ", app.get('ip'), app.get('port'));
+*/
+var port = process.env.PORT||3002 ;
+var host = process.env.HOST||'0.0.0.0' ;
+server.listen(port,host, function() {
+  console.log("Chat bot server listening at %s:%d ", host, port);
 });
